@@ -1,6 +1,10 @@
-# MyDigitalTwin
+# Digital Twin
 
-MyDigitalTwin is a personalized AI chatbot that mirrors your personality, providing a conversational experience tailored to your unique traits and preferences. Built with a modern tech stack, it features a sleek, professional frontend with a white and green theme and a robust backend powered by FastAPI and OpenAI's API. This project showcases end-to-end development, from API-driven backend logic to an interactive, user-friendly interface.
+- **Digital Twin** is a personalized AI chatbot that mirrors your personality, providing a conversational experience tailored to your unique traits and preferences. 
+
+- Built with a modern tech stack, it features a sleek, professional frontend with a white and green theme and a robust backend powered by FastAPI and OpenAI's API. 
+
+- This project showcases end-to-end development, from API-driven backend logic to an interactive, user-friendly interface.
 
 
 ## Features
