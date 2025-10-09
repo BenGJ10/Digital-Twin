@@ -7,6 +7,11 @@
 - This project showcases end-to-end development, from API-driven backend logic to an interactive, user-friendly interface.
 
 ---
+## Overview
+
+![Chatbot Interface](images/chatbot_interface.png)
+
+---
 
 ## Features
 
