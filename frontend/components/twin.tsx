@@ -72,7 +72,7 @@ export default function Twin() {
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: 'Sorry, I encountered an error. Please try again.',
+                content: 'Apologies, an error occurred. Please try again.',
                 timestamp: new Date(),
             };
             setMessages(prev => [...prev, errorMessage]);
@@ -89,63 +89,63 @@ export default function Twin() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-white rounded-2xl shadow-xl border border-green-100">
+        <div className="flex flex-col h-full bg-white rounded-2xl shadow-2xl border border-gray-100 font-sans">
             {/* Header */}
-            <div className="bg-green-600 text-white p-6 rounded-t-2xl">
-                <div className="flex items-center gap-3">
-                    <MessageCircle className="w-8 h-8" />
-                    <div>
-                        <h2 className="text-2xl font-bold">AI Digital Twin</h2>
-                        <p className="text-sm text-green-100">Your Personal AI Companion</p>
-                    </div>
+            <div className="bg-emerald-800 text-white p-6 rounded-t-2xl flex items-center gap-4 transition-all">
+                <MessageCircle className="w-8 h-8 text-emerald-200" />
+                <div>
+                    <h2 className="text-2xl font-semibold tracking-tight">Digital Twin AI</h2>
+                    <p className="text-sm text-emerald-200 mt-1">Your personalized conversational companion</p>
                 </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
                 {messages.length === 0 && (
-                    <div className="text-center text-gray-500 mt-12">
-                        <Bot className="w-16 h-16 mx-auto mb-4 text-green-500" />
+                    <div className="text-center text-gray-600 mt-16 animate-fade-in">
+                        <Bot className="w-16 h-16 mx-auto mb-4 text-emerald-700" />
                         <p className="text-lg font-medium">Welcome to Your Digital Twin</p>
-                        <p className="text-sm mt-2">Ask me anything to get started!</p>
+                        <p className="text-sm mt-2 max-w-md mx-auto">
+                            Engage with your AI companion, designed to reflect your unique perspective. Start by asking a question or sharing a thought.
+                        </p>
                     </div>
                 )}
 
                 {messages.map((message) => (
                     <div
                         key={message.id}
-                        className={`flex gap-4 ${
+                        className={`flex gap-4 items-start transition-all duration-300 hover:scale-[1.01] ${
                             message.role === 'user' ? 'justify-end' : 'justify-start'
                         }`}
                     >
                         {message.role === 'assistant' && (
                             <div className="flex-shrink-0">
-                                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center hover:bg-emerald-900 transition-colors">
                                     <Bot className="w-6 h-6 text-white" />
                                 </div>
                             </div>
                         )}
 
                         <div
-                            className={`max-w-[75%] rounded-2xl p-4 shadow-sm ${
+                            className={`max-w-[70%] rounded-2xl p-4 shadow-md transition-all duration-200 hover:shadow-lg ${
                                 message.role === 'user'
-                                    ? 'bg-green-500 text-white'
+                                    ? 'bg-emerald-700 text-white'
                                     : 'bg-white border border-gray-200 text-gray-800'
                             }`}
                         >
-                            <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+                            <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
                             <p
-                                className={`text-xs mt-2 ${
-                                    message.role === 'user' ? 'text-green-100' : 'text-gray-400'
+                                className={`text-xs mt-2 font-light ${
+                                    message.role === 'user' ? 'text-emerald-200' : 'text-gray-500'
                                 }`}
                             >
-                                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                             </p>
                         </div>
 
                         {message.role === 'user' && (
                             <div className="flex-shrink-0">
-                                <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                                     <User className="w-6 h-6 text-white" />
                                 </div>
                             </div>
@@ -154,14 +154,14 @@ export default function Twin() {
                 ))}
 
                 {isLoading && (
-                    <div className="flex gap-4 justify-start">
+                    <div className="flex gap-4 justify-start animate-pulse">
                         <div className="flex-shrink-0">
-                            <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                            <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center">
                                 <Bot className="w-6 h-6 text-white" />
                             </div>
                         </div>
-                        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
-                            <Loader2 className="w-5 h-5 text-green-500 animate-spin" />
+                        <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-md">
+                            <Loader2 className="w-5 h-5 text-emerald-700 animate-spin" />
                         </div>
                     </div>
                 )}
@@ -170,23 +170,24 @@ export default function Twin() {
             </div>
 
             {/* Input */}
-            <div className="border-t border-gray-200 p-4 bg-white rounded-b-2xl">
+            <div className="border-t border-gray-200 p-5 bg-white rounded-b-2xl">
                 <div className="flex gap-3">
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyPress}
-                        placeholder="Type your message..."
-                        className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 text-sm transition-all"
+                        placeholder="Enter your message..."
+                        className="flex-1 px-5 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 text-gray-800 text-sm transition-all duration-200 hover:border-emerald-300"
                         disabled={isLoading}
                     />
                     <button
                         onClick={sendMessage}
                         disabled={!input.trim() || isLoading}
-                        className="px-5 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="px-6 py-3 bg-emerald-800 text-white rounded-xl hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2"
                     >
                         <Send className="w-5 h-5" />
+                        <span className="text-sm font-medium">Send</span>
                     </button>
                 </div>
             </div>
