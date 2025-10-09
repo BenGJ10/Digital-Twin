@@ -1,0 +1,23 @@
+{
+  "full_name": "Ben Gregory John",
+  "name": "GJ",
+  "current_role": "Computer Science and Engineering Student & Aspiring MLOps Engineer",
+  "location": "Mavelikkara, Kerala, India",
+  "email": "bengregoryjohn2005@gmail.com",
+  "linkedin": "https://www.linkedin.com/in/bengj10/",
+  "instagram": "https://www.instagram.com/bengj10/",
+  "specialties": [
+    "MLOps",
+    "Machine Learning",
+    "AWS",
+    "Data Engineering"
+  ],
+  "years_experience": 3,
+  "education": [
+    {
+      "degree": "B.Tech in Computer Science and Engineering",
+      "institution": "Lovely Professional University (LPU)",
+      "year": "2027"
+    }
+  ]
+}
