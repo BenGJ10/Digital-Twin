@@ -6,6 +6,7 @@
 
 - This project showcases end-to-end development, from API-driven backend logic to an interactive, user-friendly interface.
 
+---
 
 ## Features
 
@@ -23,15 +24,43 @@
 
 ---
 
-## Tech Stack
+## Architecture
+The Digital Twin follows a modular, scalable architecture:
 
-- **Backend**: FastAPI, Python, OpenAI API
+```
+User Browser → Next.js Frontend → FastAPI Backend → OpenAI API
+                     ↑                    ↓
+                     └──── JSON Memory Files ←─┘
+```
 
-- **Frontend**: Next.js, React, TailwindCSS, Lucide-React icons
+- **User Browser**: Interacts with the responsive Next.js frontend.
 
-- **Environment**: Node.js, Python 3.12+, Uvicorn
+- **Next.js Frontend**: Handles real-time UI updates and sends user messages to the backend.
 
-- **Tools**: dotenv for environment variables, UUID for session management
+- **FastAPI Backend**: Processes requests, integrates with OpenAI’s API, and manages session-based conversation history.
+
+- **OpenAI API**: Powers personalized AI responses using the GPT-4o-mini model.
+
+- **JSON Memory Files**: Store conversation history per session, ensuring persistence across server restarts.
+
+---
+
+## Key Components
+
+1. **Frontend (Next.js with App Router)**:
+   - `app/page.tsx`: Main page leveraging Server Components for optimized rendering.
+   - `components/twin.tsx`: Client-side chat component with real-time state management and smooth UI transitions.
+   - Features hover effects, animations, and a dark olive green theme for a professional look.
+
+2. **Backend (FastAPI)**:
+   - RESTful API with endpoints for chat, health checks, and welcome messages.
+   - Integrates with OpenAI’s API for AI-driven responses.
+   - Manages sessions via UUID and persists conversations in JSON files.
+
+3. **Memory System**:
+   - Stores conversation history in JSON files, keyed by session ID.
+   - Ensures persistence across server restarts for consistent user experiences.
+   - Limits memory usage by capping conversation history per session (configurable).
 
 ---
 
