@@ -1,11 +1,15 @@
 import os
 import uuid
+import json
 import uvicorn
+from pathlib import Path
+from datetime import datetime
 from openai import OpenAI
 from typing import Optional
 from dotenv import load_dotenv
 from pydantic import BaseModel # BaseModel is used for request/response models. It provides data validation and serialization.
 from fastapi import FastAPI, HTTPException
+from typing import Optional, List, Dict
 from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
@@ -26,12 +30,34 @@ app.add_middleware(
 # Initialize OpenAI client
 client = OpenAI()
 
+# Memory directory
+MEMORY_DIR = Path("../memory")
+MEMORY_DIR.mkdir(exist_ok = True)
+
 # Load personality details
 def load_personality():
     with open("me.txt", "r", encoding = "utf-8") as file:
         return file.read().strip()
     
 PERSONALITY = load_personality()
+
+
+# Memory functions
+def load_conversation(session_id: str) -> List[Dict]:
+    """Load conversation history from file"""
+    file_path = MEMORY_DIR / f"{session_id}.json"
+    if file_path.exists():
+        with open(file_path, "r", encoding = "utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_conversation(session_id: str, messages: List[Dict]):
+    """Save conversation history to file"""
+    file_path = MEMORY_DIR / f"{session_id}.json"
+    with open(file_path, "w", encoding = "utf-8") as f:
+        json.dump(messages, f, indent = 2, ensure_ascii = False)
+
 
 # Request model
 class ChatRequest(BaseModel):
@@ -42,7 +68,6 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     response: str
     session_id: str
-
 
 @app.get("/")
 async def root():
@@ -57,19 +82,34 @@ async def chat(request: ChatRequest):
     try:
         # Generate session ID if not provided
         session_id = request.session_id or str(uuid.uuid4())
-        # Create system message with personality
         
-        # NOTE: No memory - each request is independent!
-        messages = [
-            {"role": "system", "content": PERSONALITY},
-            {"role": "user", "content": request.message},
-        ]
-
+        # Load conversation history
+        conversation = load_conversation(session_id)
+        
+        # Build messages with history
+        messages = [{"role": "system", "content": PERSONALITY}]
+        
+        # Add conversation history
+        for msg in conversation:
+            messages.append(msg)
+        
+        # Add current message
+        messages.append({"role": "user", "content": request.message})
+        
         # Call OpenAI API
         response = client.chat.completions.create(
             model = "gpt-4o-mini", 
             messages = messages
         )
+        
+        assistant_response = response.choices[0].message.content
+
+        # Update conversation history
+        conversation.append({"role": "user", "content": request.message})
+        conversation.append({"role": "assistant", "content": assistant_response})
+        
+        # Save updated conversation
+        save_conversation(session_id, conversation)
 
         return ChatResponse(
             response = response.choices[0].message.content, 
@@ -78,6 +118,21 @@ async def chat(request: ChatRequest):
 
     except Exception as e:
         raise HTTPException(status_code = 500, detail = str(e))
-    
+
+@app.get("/sessions")
+async def list_sessions():
+    """List all conversation sessions"""
+    sessions = []
+    for file_path in MEMORY_DIR.glob("*.json"):
+        session_id = file_path.stem
+        with open(file_path, "r", encoding = "utf-8") as f:
+            conversation = json.load(f)
+            sessions.append({
+                "session_id": session_id,
+                "message_count": len(conversation),
+                "last_message": conversation[-1]["content"] if conversation else None
+            })
+    return {"sessions": sessions}
+
 if __name__ == "__main__":
     uvicorn.run(app, host = "0.0.0.0", port = 8000)
