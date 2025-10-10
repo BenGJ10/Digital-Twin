@@ -209,3 +209,6 @@ __marimo__/
 # Python UV files
 uv/
 uv.lock
+
+lambda-deployment.zip
+lambda-package/
