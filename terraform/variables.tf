@@ -16,10 +16,16 @@ variable "environment" {
   }
 }
 
-variable "bedrock_model_id" {
-  description = "Bedrock model ID"
+variable "openai_api_key" {
+  description = "OpenAI API key for accessing GPT models"
   type        = string
-  default     = "amazon.nova-micro-v1:0"
+  sensitive   = true
+}
+
+variable "openai_model_id" {
+  description = "OpenAI model to use (e.g., gpt-4o, gpt-4-turbo)"
+  type        = string
+  default     = "gpt-4o-mini"
 }
 
 variable "lambda_timeout" {
