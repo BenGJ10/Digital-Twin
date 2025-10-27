@@ -15,6 +15,7 @@ echo "📦 Building Lambda package..."
 cd terraform
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 AWS_REGION=${DEFAULT_AWS_REGION:-us-east-1}
+
 terraform init -input=false \
   -backend-config="bucket=twin-terraform-state-${AWS_ACCOUNT_ID}" \
   -backend-config="key=${ENVIRONMENT}/terraform.tfstate" \
@@ -30,10 +31,20 @@ fi
 
 # Use prod.tfvars for production environment
 if [ "$ENVIRONMENT" = "prod" ]; then
-  TF_APPLY_CMD=(terraform apply -var-file=prod.tfvars -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply \
+    -var-file=prod.tfvars \
+    -var="project_name=$PROJECT_NAME" \
+    -var="environment=$ENVIRONMENT" \
+    -var="openai_api_key=$OPENAI_API_KEY" \
+    -auto-approve)
 else
-  TF_APPLY_CMD=(terraform apply -var="project_name=$PROJECT_NAME" -var="environment=$ENVIRONMENT" -auto-approve)
+  TF_APPLY_CMD=(terraform apply \
+    -var="project_name=$PROJECT_NAME" \
+    -var="environment=$ENVIRONMENT" \
+    -var="openai_api_key=$OPENAI_API_KEY" \
+    -auto-approve)
 fi
+
 
 echo "🎯 Applying Terraform..."
 "${TF_APPLY_CMD[@]}"
