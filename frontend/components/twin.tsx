@@ -16,6 +16,7 @@ export default function Twin() {
     const [isLoading, setIsLoading] = useState(false);
     const [sessionId, setSessionId] = useState<string>('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -88,6 +89,15 @@ export default function Twin() {
         }
     };
 
+    // Check if avatar exists
+    const [hasAvatar, setHasAvatar] = useState(false);
+    useEffect(() => {
+        // Check if avatar.jpeg exists
+        fetch('/avatar.jpeg', { method: 'HEAD' })
+            .then(res => setHasAvatar(res.ok))
+            .catch(() => setHasAvatar(false));
+    }, []);
+
     return (
         <div className="flex flex-col h-full bg-white rounded-2xl shadow-2xl border border-gray-100 font-sans">
             {/* Header */}
@@ -103,11 +113,22 @@ export default function Twin() {
             <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50">
                 {messages.length === 0 && (
                     <div className="text-center text-gray-600 mt-16 animate-fade-in">
-                        <Bot className="w-16 h-16 mx-auto mb-4 text-emerald-700" />
-                        <p className="text-lg font-medium">Welcome to Your Digital Twin</p>
-                        <p className="text-sm mt-2 max-w-md mx-auto">
-                            Engage with your AI companion, designed to reflect your unique perspective. Start by asking a question or sharing a thought.
-                        </p>
+                        {hasAvatar ? (
+                            <img
+                                src="/avatar.jpeg"
+                                alt="Digital Twin Avatar"
+                                className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-gray-300"
+                            />
+                        ) : (
+                            <div>
+                                <Bot className="w-16 h-16 mx-auto mb-4 text-emerald-700" />
+                                <p className="text-lg font-medium">Welcome to Your Digital Twin</p>
+                                <p className="text-sm mt-2 max-w-md mx-auto">
+                                    Engage with your AI companion, designed to reflect your unique perspective.
+                                    Start by asking a question or sharing a thought.
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -120,9 +141,17 @@ export default function Twin() {
                     >
                         {message.role === 'assistant' && (
                             <div className="flex-shrink-0">
-                                <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center hover:bg-emerald-900 transition-colors">
-                                    <Bot className="w-6 h-6 text-white" />
-                                </div>
+                                {hasAvatar ? (
+                                    <img
+                                        src="/avatar.jpeg"
+                                        alt="Digital Twin Avatar"
+                                        className="w-10 h-10 rounded-full border border-gray-200"
+                                    />
+                                ) : (
+                                    <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center hover:bg-emerald-900 transition-colors">
+                                        <Bot className="w-6 h-6 text-white" />
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -156,9 +185,17 @@ export default function Twin() {
                 {isLoading && (
                     <div className="flex gap-4 justify-start animate-pulse">
                         <div className="flex-shrink-0">
-                            <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center">
-                                <Bot className="w-6 h-6 text-white" />
-                            </div>
+                            {hasAvatar ? (
+                                <img
+                                    src="/avatar.jpeg"
+                                    alt="Digital Twin Avatar"
+                                    className="w-10 h-10 rounded-full border border-gray-200"
+                                />
+                            ) : (
+                                <div className="w-10 h-10 bg-emerald-800 rounded-full flex items-center justify-center">
+                                    <Bot className="w-6 h-6 text-white" />
+                                </div>
+                            )}
                         </div>
                         <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-md">
                             <Loader2 className="w-5 h-5 text-emerald-700 animate-spin" />
