@@ -231,6 +231,9 @@ lambda-package/
 .env
 .env.*
 
+# Memory storage (contains conversation history)
+memory/
+
 # Node
 node_modules/
 out/
@@ -247,3 +250,7 @@ uv.lock
 .idea/
 *.swp
 .DS_Store
+Thumbs.db
+
+# AWS
+.aws/
